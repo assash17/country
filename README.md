@@ -2,6 +2,8 @@
 
 [Countries GraphQL API](https://countries.trevorblades.com/)를 사용해 국가를 검색하고 상세 정보를 확인하는 Next.js 앱입니다.
 
+**Live Demo:** [https://assash17.github.io/country/](https://assash17.github.io/country/)
+
 ## 기능
 
 - 국가 이름으로 실시간 검색 (정규식 기반, 대소문자 무시)
@@ -86,10 +88,7 @@ GraphQL 관련 로직은 `lib/graphql.ts`에 정의되어 있습니다.
 2. 저장소 **Settings → Pages → Build and deployment**에서 Source를 **GitHub Actions**로 설정합니다.
 3. `main`(또는 `master`) 브랜치에 push하면 `.github/workflows/deploy.yml` 워크플로가 빌드 후 자동 배포합니다.
 
-배포 URL:
-
-- 일반 저장소: `https://<username>.github.io/<repository-name>/`
-- `<username>.github.io` 저장소: `https://<username>.github.io/`
+배포 URL: [https://assash17.github.io/country/](https://assash17.github.io/country/)
 
 ### 로컬에서 정적 빌드 확인
 
@@ -97,10 +96,10 @@ GitHub Pages와 동일한 base path로 빌드하려면:
 
 ```bash
 # Windows (PowerShell)
-$env:NEXT_PUBLIC_BASE_PATH="/test"; npm run build
+$env:NEXT_PUBLIC_BASE_PATH="/country"; npm run build
 
 # macOS / Linux
-NEXT_PUBLIC_BASE_PATH=/test npm run build
+NEXT_PUBLIC_BASE_PATH=/country npm run build
 ```
 
 빌드 결과는 `out/` 디렉터리에 생성됩니다. 로컬에서 확인하려면 정적 서버로 `out/`을 서빙하면 됩니다.
