@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Country Search
 
-## Getting Started
+[Countries GraphQL API](https://countries.trevorblades.com/)를 사용해 국가를 검색하고 상세 정보를 확인하는 Next.js 앱입니다.
 
-First, run the development server:
+## 기능
+
+- 국가 이름으로 실시간 검색 (정규식 기반, 대소문자 무시)
+- 국가 목록 카드 UI (국기, 수도 표시)
+- 국가 상세 페이지 (`/country/[code]`) — 코드, 수도, 통화, 전화 코드, 대륙, AWS 리전, 사용 언어 등
+
+## 기술 스택
+
+- [Next.js 16](https://nextjs.org) (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- [graphql-request](https://github.com/jasonkuhrt/graphql-request)
+
+## 프로젝트 구조
+
+```
+test/
+├── app/
+│   ├── layout.tsx              # 루트 레이아웃
+│   ├── page.tsx                # 홈 — 국가 검색 및 목록
+│   ├── globals.css
+│   └── country/[code]/
+│       ├── page.tsx            # 국가 상세 (정적 생성)
+│       └── CountryDetail.tsx   # 국가 상세 클라이언트 컴포넌트
+├── lib/
+│   └── graphql.ts              # GraphQL 클라이언트 및 쿼리
+├── public/                     # 정적 에셋
+└── .github/workflows/
+    └── deploy.yml              # GitHub Pages 배포
+```
+
+## 시작하기
+
+의존성 설치:
+
+```bash
+npm install
+```
+
+개발 서버 실행:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인합니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 스크립트
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 명령어 | 설명 |
+|--------|------|
+| `npm run dev` | 개발 서버 실행 |
+| `npm run build` | 정적 사이트 빌드 (`out/` 생성) |
+| `npm run start` | Next.js 서버 실행 (정적 export 빌드에는 `npx serve out` 사용) |
+| `npm run lint` | ESLint 실행 |
 
-## Learn More
+## 데이터 소스
 
-To learn more about Next.js, take a look at the following resources:
+국가 데이터는 [https://countries.trevorblades.com/graphql](https://countries.trevorblades.com/graphql)에서 가져옵니다. 국기 이미지는 [flagcdn.com](https://flagcdn.com)을 사용합니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+GraphQL 관련 로직은 `lib/graphql.ts`에 정의되어 있습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `getAllCountries()` — 전체 국가 목록 조회
+- `getCountryByCode(code)` — 국가 코드로 상세 정보 조회
+- `filterCountriesByName(countries, searchTerm)` — 이름으로 필터링
 
-## Deploy on Vercel
+## 라우트
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| 경로 | 설명 |
+|------|------|
+| `/` | 국가 검색 및 목록 |
+| `/country/[code]` | 국가 상세 (예: `/country/KR`) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## GitHub Pages 배포
+
+이 프로젝트는 Next.js 정적 export(`output: "export"`)로 GitHub Pages에 배포할 수 있습니다.
+
+### 자동 배포 (GitHub Actions)
+
+1. GitHub 저장소에 코드를 push합니다.
+2. 저장소 **Settings → Pages → Build and deployment**에서 Source를 **GitHub Actions**로 설정합니다.
+3. `main`(또는 `master`) 브랜치에 push하면 `.github/workflows/deploy.yml` 워크플로가 빌드 후 자동 배포합니다.
+
+배포 URL:
+
+- 일반 저장소: `https://<username>.github.io/<repository-name>/`
+- `<username>.github.io` 저장소: `https://<username>.github.io/`
+
+### 로컬에서 정적 빌드 확인
+
+GitHub Pages와 동일한 base path로 빌드하려면:
+
+```bash
+# Windows (PowerShell)
+$env:NEXT_PUBLIC_BASE_PATH="/test"; npm run build
+
+# macOS / Linux
+NEXT_PUBLIC_BASE_PATH=/test npm run build
+```
+
+빌드 결과는 `out/` 디렉터리에 생성됩니다. 로컬에서 확인하려면 정적 서버로 `out/`을 서빙하면 됩니다.
+
+```bash
+npx serve out
+```
